@@ -1,0 +1,42 @@
+import streamlit as st
+
+st.set_page_config(page_title="اپلیکیشن ایران‌ما", page_icon="🎓")
+
+if 'user_name' not in st.session_state: st.session_state.user_name = ""
+if 'score' not in st.session_state: st.session_state.score = 0
+
+st.title("📱 اپلیکیشن آموزشی ایران‌ما")
+
+st.sidebar.header("تنظیمات")
+st.session_state.user_name = st.sidebar.text_input("نام شما:", st.session_state.user_name)
+
+menu = st.sidebar.radio("منو", ["خانه", "آزمون هوشمند"])
+
+if menu == "خانه":
+    st.write(f"### سلام {st.session_state.user_name} عزیز!")
+    st.write("آماده‌ای برای رقابت؟ از منوی سمت چپ 'آزمون هوشمند' را انتخاب کن.")
+
+elif menu == "آزمون هوشمند":
+    if not st.session_state.user_name:
+        st.warning("ابتدا نام خود را در سایدبار وارد کن.")
+    else:
+        # ایجاد نوار پیشرفت
+        progress_bar = st.progress(0)
+        
+        st.write("### سوال ۱: حاصل $5^3$؟")
+        q1 = st.radio("انتخاب کن:", ["...", "۱۵", "۱۲۵", "۲۵"], key="q1")
+        
+        if q1 != "...":
+            progress_bar.progress(50) # پیشرفت ۵۰ درصد
+            
+        st.write("### سوال ۲: حاصل $(-2)^4$؟")
+        q2 = st.radio("انتخاب کن:", ["...", "۱۶", "-۱۶", "۸"], key="q2")
+        
+        if q2 != "...":
+            progress_bar.progress(100) # پیشرفت ۱۰۰ درصد
+            
+        if st.button("پایان و مشاهده نتیجه"):
+            final_score = 0
+            if q1 == "۱۲۵": final_score += 1
+            if q2 == "۱۶": final_score += 1
+            st.success(f"آفرین {st.session_state.user_name}! نمره نهایی: {final_score} از ۲")
